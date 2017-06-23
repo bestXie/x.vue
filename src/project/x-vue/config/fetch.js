@@ -1,79 +1,37 @@
-import {
-    baseUrl
-} from './env'
+/**
+ * Created by bestxie on 2017/6/6.
+ */
+import axios from 'axios';
+// import router from '../router';
 
-export default async (url = '', data = {}, type = 'GET', method = 'fetch') => {
-    type = type.toUpperCase();
-    url = baseUrl + url;
+// 创建axios实例
+const service = axios.create({
+    baseURL: '', // api的base_url
+    timeout: 5000                  // 请求超时时间
+});
 
-    if (type == 'GET') {
-        let dataStr = ''; //数据拼接字符串
-        Object.keys(data).forEach(key => {
-            dataStr += key + '=' + data[key] + '&';
-        })
+// request拦截器
+service.interceptors.request.use(config => {
+    // Do something before request is sent
+    return config;
+}, error => {
+    // Do something with request error
+    console.log(error); // for debug
+    Promise.reject(error);
+});
 
-        if (dataStr !== '') {
-            dataStr = dataStr.substr(0, dataStr.lastIndexOf('&'));
-            url = url + '?' + dataStr;
-        }
+// respone拦截器
+service.interceptors.response.use(
+    response => response
+    /**
+     * 下面的注释为通过response自定义code来标示请求状态，当code返回如下情况为权限有问题，登出并返回到登录页
+     * 如通过xmlhttprequest 状态码标识 逻辑可写在下面error中
+     */
+    ,
+    error => {
+        console.log('err' + error);// for debug
+        return Promise.reject(error);
     }
+);
 
-    if (window.fetch && method == 'fetch') {
-        let requestConfig = {
-            credentials: 'include',
-            method: type,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json'
-            },
-            mode: "cors",
-            cache: "force-cache"
-        }
-
-        if (type == 'POST') {
-            Object.defineProperty(requestConfig, 'body', {
-                value: JSON.stringify(data)
-            })
-        }
-
-        try {
-            const response = await fetch(url, requestConfig);
-            const responseJson = await response.json();
-            return responseJson
-        } catch (error) {
-            throw new Error(error)
-        }
-    } else {
-        return new Promise((resolve, reject) => {
-            let requestObj;
-            if (window.XMLHttpRequest) {
-                requestObj = new XMLHttpRequest();
-            } else {
-                requestObj = new ActiveXObject;
-            }
-
-            let sendData = '';
-            if (type == 'POST') {
-                sendData = JSON.stringify(data);
-            }
-
-            requestObj.open(type, url, true);
-            requestObj.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            requestObj.send(sendData);
-
-            requestObj.onreadystatechange = () => {
-                if (requestObj.readyState == 4) {
-                    if (requestObj.status == 200) {
-                        let obj = requestObj.response
-                        if (typeof obj !== 'object') {
-                            obj = JSON.parse(obj);
-                        }
-                        resolve(obj)
-                    } else {
-                        reject(requestObj)
-                    }
-                }
-            }
-        })
-    }
-}
+export default service;

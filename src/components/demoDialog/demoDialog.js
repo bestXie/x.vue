@@ -7,7 +7,6 @@ import Vue from 'vue'
 
     function install(Vue){
 
-
         Vue.dialog = function(config){
             var vm = null;
             Vue.config.delimiters = ['{{', '}}']

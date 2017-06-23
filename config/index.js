@@ -2,8 +2,20 @@
 
 let path = require('path');
 
-let X_PROJECT_NAME = '/' + (process.argv.slice(2).length > 0 ? process.argv.slice(2)[0] : 'x-vue');
-
+let X_PROJECT_NAME = '/';
+let port = '8081';
+if (typeof (process.argv[2]) !== 'undefined') {
+    X_PROJECT_NAME += process.argv[2];
+} else {
+    X_PROJECT_NAME += 'x-vue';
+}
+if (typeof (process.argv[3]) !== 'undefined') {
+    if (isNaN(process.argv[3])) { // 如果端口号不为数字，提示格式错误
+        throw 'Please write a correct port number.'
+    } else { // 如果端口号输入正确，将其应用到端口
+        port = process.argv[3];
+    }
+}
 module.exports = {
     X_CROSS_ENV: {
         X_PROJECT_NAME: X_PROJECT_NAME
@@ -29,7 +41,7 @@ module.exports = {
     },
     dev: {
         env: require('./dev.env'),
-        port: 8081,
+        port: port,
         autoOpenBrowser: true,
         assetsSubDirectory: 'static',
         assetsPublicPath: '/',

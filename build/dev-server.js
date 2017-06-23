@@ -4,6 +4,7 @@
 require('./check-versions')();
 
 let config = require('../config');
+
 if (!process.env.NODE_ENV) {
     process.env.NODE_ENV = JSON.parse(config.dev.env.NODE_ENV)
 }
@@ -27,29 +28,62 @@ let proxyTable = config.dev.proxyTable;
 let app = express();
 let compiler = webpack(webpackConfig);
 
+
+Date.prototype.format = function (format) {
+    let o = {
+        "M+": this.getMonth() + 1, //month
+        "d+": this.getDate(), //day
+        "h+": this.getHours(), //hour
+        "m+": this.getMinutes(), //minute
+        "s+": this.getSeconds(), //second
+        "q+": Math.floor((this.getMonth() + 3) / 3), //quarter
+        "S": this.getMilliseconds() //millisecond
+    };
+    if (/(y+)/.test(format)) {
+        format = format.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+    }
+    for (let k in o) {
+        if (new RegExp("(" + k + ")").test(format)) {
+            format = format.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+        }
+    }
+    return format;
+};
+
 let devMiddleware = require('webpack-dev-middleware')(compiler, {
     publicPath: webpackConfig.output.publicPath,
-    quiet: true
-});
-
-let hotMiddleware = require('webpack-hot-middleware')(compiler, {
-    log: () => {
+    quiet: true,
+    noInfo: false,
+    stats: {
+        colors: true, toJson(data){
+            console.log(data)
+        }
     }
 });
 
+let hotMiddleware = require('webpack-hot-middleware')(compiler, {
+    log: (data) => {
+        console.log(chalk.cyan(data + '  ==>>  ' + (new Date()).format("yyyy-MM-dd hh:mm:ss") + '\n'));
+    }
+});
+
+
 function getIPAdress() {
     let interfaces = require('os').networkInterfaces();
+    console.log(JSON.stringify(interfaces) + '\n');
     for (let devName in interfaces) {
         let iface = interfaces[devName];
         for (let i = 0; i < iface.length; i++) {
             let alias = iface[i];
-            if (alias.family === 'IPv4') {
+            if (alias.family === 'IPv4' && alias.address != "127.0.0.1") {
                 return alias.address;
             }
         }
     }
 }
 console.log(chalk.cyan(' start.\n  项目启动中...\n'));
+
+
 // force page reload when html-webpack-plugin template changes
 compiler.plugin('compilation', function (compilation) {
     compilation.plugin('html-webpack-plugin-after-emit', function (data, cb) {
@@ -82,10 +116,12 @@ let staticPath = path.posix.join(config.dev.assetsPublicPath, config.dev.assetsS
 app.use(staticPath, express.static('./static'));
 
 let uri = 'http://localhost:' + port;
+let ip = getIPAdress()
 
 devMiddleware.waitUntilValid(function () {
+
     console.log('> Listening at ' + uri + '\n');
-    console.log('> Listening at ' + 'http://' + getIPAdress() + ':' + port + '\n');
+    console.log(chalk.cyan('> Listening at ' +' '+ (new Date()).format("yyyy-MM-dd hh:mm:ss S")+ ' '+ 'http://' + ip + ':' + port + '\n'));
 });
 
 module.exports = app.listen(port, function (err) {
@@ -96,6 +132,6 @@ module.exports = app.listen(port, function (err) {
 
     // when env is testing, don't need open it
     if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
-        opn('http://' + getIPAdress() + ':' + port)
+        opn('http://' + ip + ':' + port)
     }
 });

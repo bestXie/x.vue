@@ -1,4 +1,4 @@
-<style scoped>
+<style lang="less" scoped>
     @import './index.less';
 </style>
 
@@ -12,26 +12,37 @@
 </template>
 
 <script>
+    import axios from 'axios'
+    import {getCasCheck} from '../../api/index.js'
     export default {
-        name: 'banner',
-        data: function () {
+        name: 'home',
+        data () {
             return {
                 link: 'DingTalk',
                 login: 'login',
-                register:'register'
+                register: 'register'
             }
         },
-        mounted: function () {
 
+        mounted () {
+            axios.get('http://ouat.fosun.com/new_portal/api/cas/check?email=ceshi@.ddd.com').then((res) => {
+                console.log(res);
+                console.log(111)
+            }).catch(function (err) {
+                console.log(err);
+            });
+            getCasCheck({email: 'ceshi@.ddd2.com'}).then(res => {
+                console.log(res)
+            });
         },
         methods: {
-            getClick: function () {
+            getClick () {
                 this.$router.push('dingtalk');
             },
-            getClick2: function () {
+            getClick2 () {
                 this.$router.push('login');
             },
-            getClick3: function () {
+            getClick3 () {
                 this.$router.push('register');
             }
         }

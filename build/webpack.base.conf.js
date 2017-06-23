@@ -16,10 +16,11 @@ module.exports = {
     },
     output: {
         path: config.build.assetsRoot,
-        filename: '[name].web.js',
+        filename: utils.assetsPath('js/[name].web.[hash].js'),
         publicPath: process.env.NODE_ENV === 'production'
             ? config.build.assetsPublicPath
-            : config.dev.assetsPublicPath
+            : config.dev.assetsPublicPath,
+        chunkFilename: utils.assetsPath('js/[name].[hash].min.js')
     },
     resolve: {
         extensions: ['.js', '.vue', '.json' ,'.less', '.css', '.scss'],
