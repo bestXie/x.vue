@@ -1,0 +1,91 @@
+@charset "utf-8";
+/**
+ * Created by bestxie on 2016/4/23.
+ */
+/**
+ * Created by bestxie on 2016/4/23.
+ */
+/*常用场景 start*/
+/*常用场景 end*/
+/*常用换算 start*/
+/*常用换算 end*/
+/*reset start */
+/*reset end */
+/*清除默认样式*/
+* {
+  margin: 0;
+  padding: 0;
+}
+li {
+  list-style: none;
+}
+img {
+  border: none;
+}
+input,
+select,
+textarea {
+  outline: none;
+  border: none;
+  background: none;
+}
+textarea {
+  resize: none;
+}
+a {
+  text-decoration: none;
+}
+/*清除dotted*/
+a,
+label {
+  blr: expression(this.onFocus=this.blur());
+}
+a,
+label {
+  outline: none;
+}
+/*设置公用类*/
+.fl {
+  float: left;
+  display: inline;
+}
+.fr {
+  float: right;
+  display: inline;
+}
+.p-r {
+  position: relative;
+}
+.p-a {
+  position: absolute;
+}
+.fix {
+  position: fixed;
+}
+.hide {
+  visibility: hidden;
+}
+.show {
+  visibility: visible;
+}
+/*禁止复制*/
+html,
+body {
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -khtml-user-select: none;
+  user-select: none;
+}
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+}
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+/*# sourceMappingURL=main.css.map*/

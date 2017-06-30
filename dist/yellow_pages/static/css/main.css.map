@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack:///./src/project/yellow_pages/container/App.vue"],"names":[],"mappings":";AACA;EACE,0BAA0B;EAC1B,YAAY;EACZ,aAAa;CACd","file":"static/css/main.css","sourcesContent":["\n.app-container {\n  background-color: #f8f8f8;\n  width: 100%;\n  height: 100%;\n}\n\n\n\n// WEBPACK FOOTER //\n// ./src/project/yellow_pages/container/App.vue"],"sourceRoot":""}
