@@ -2,48 +2,52 @@
 * Created by bestXie on 2017/6/16.
 */
 <template>
-    <transition name="modal" v-if="dialog.isShow" >
-        <div class="modal-mask" >
-            <div class="modal-mask-bg"  @click="hiddenDialog"></div>
-            <div class="modal-wrapper">
-                <div class="modal-container">
+    <div class="modal-mask" v-if="dialog.isShow">
+        <div class="modal-mask-bg" @click="hiddenDialog" :style="dialog.maskBg"></div>
+        <div class="modal-wrapper">
+            <div class="modal-container" v-bind:class="{ slideUp: dialog.isShow }">
 
-                    <div class="modal-header">
-                        <slot name="header">
-                        </slot>
-                    </div>
+                <div class="modal-header">
+                    <slot name="header">
+                    </slot>
+                </div>
 
-                    <div class="modal-body">
-                        <slot name="body" :dialog="dialog">
-                        </slot>
-                    </div>
+                <div class="modal-body">
+                    <slot name="body" :dialog="dialog">
+                    </slot>
+                </div>
 
-                    <div class="modal-footer">
-                        <slot name="footer">
-                          <!--  <button class="modal-default-button" @click="$emit('close')">
-                                OK
-                            </button>-->
-                        </slot>
-                    </div>
+                <div class="modal-footer">
+                    <slot name="footer">
+                        <!--  <button class="modal-default-button" @click="$emit('close')">
+                              OK
+                          </button>-->
+                    </slot>
                 </div>
             </div>
         </div>
-    </transition>
+    </div>
 </template>
 <script>
     export default {
         props: ['dialog'],
         data: function () {
             return {
-
+                slideUp: ''
             }
         },
         mounted: function () {
 //            console.log(this.dialog);
+            if (this.dialog.isShow) {
+                this.slideUp = 'slideUp'
+            }
         },
         methods: {
             hiddenDialog: function () {
-                this.dialog.isShow = false;
+                if(this.dialog.bgHide){
+                    this.dialog.isShow = false;
+                    this.slideUp = ''
+                }
             },
             confirmData: function () {
                 this.dialog.success(this.dialog.data)
@@ -52,7 +56,7 @@
     };
 </script>
 
-<style lang="less">
+<style>
     .modal-mask {
         position: fixed;
         z-index: 9998;
@@ -61,9 +65,9 @@
         width: 100%;
         height: 100%;
         display: table;
-        transition: opacity .3s ease;
     }
-    .modal-mask-bg{
+
+    .modal-mask-bg {
         position: absolute;
         top: 0;
         left: 0;
@@ -71,20 +75,71 @@
         height: 100%;
         background-color: rgba(0, 0, 0, .5);
         transition: opacity .3s ease;
+
     }
+
     .modal-wrapper {
         display: table-cell;
-        vertical-align: middle;
+        vertical-align: bottom;
+        width: 100%;
     }
 
     .modal-container {
-        min-width: 5rem;
-        min-height: 2rem;
-        /*background-color: #fff;*/
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
         border-radius: 2px;
-        /*box-shadow: 0 2px 8px rgba(0, 0, 0, .33);*/
-        transition: all .3s ease;
         font-family: Helvetica, Arial, sans-serif;
+        max-height: 70%;
+        overflow: hidden;
+        overflow-y: auto;
+        -webkit-transition: all 3s linear;
+        -moz-transition: all 3s linear;
+        -o-transition: all 3s linear;
+        transition: all 3s linear;
+        -webkit-transform: translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0);
+
+    }
+
+
+
+    .slideUp {
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+        -webkit-animation-name: liInUp;
+        animation-name: liInUp;
+        animation-duration: .3s;
+        -webkit-animation-duration: .3s;
+        animation-delay: 0s;
+    }
+
+    @-webkit-keyframes liInUp {
+        0% {
+            opacity: 0;
+            -webkit-transform: translate3d(0,90%, 0);
+            transform: translate3d(0, 90%, 0)
+        }
+        100% {
+            opacity: 1;
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0)
+        }
+    }
+
+    @keyframes liInUp {
+        0% {
+            opacity: 0;
+            -webkit-transform: translate3d(0,90%, 0);
+            transform: translate3d(0, 90%, 0)
+        }
+        100% {
+            opacity: 1;
+            -webkit-transform: translate3d(0, 0, 0);
+            transform: translate3d(0, 0, 0)
+        }
     }
 
     .modal-header h3 {
@@ -117,9 +172,4 @@
         opacity: 0;
     }
 
-    .modal-enter .modal-container,
-    .modal-leave-active .modal-container {
-        -webkit-transform: scale(1.1);
-        transform: scale(1.1);
-    }
 </style>

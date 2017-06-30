@@ -1,50 +1,77 @@
 import VueRouter from 'vue-router';
 // import {routes} from '../config/router.conf.js'
 
-const Home = r => require.ensure([], () => r(require('../pages/home/index')), 'pages_home');
-const Modify = r => require.ensure([], () => r(require('../pages/modify/index')), 'pages_modify');
-const Dome = r => require.ensure([], () => r(require('../pages/dome/index')), 'pages_dome');
-const sortable = r => require.ensure([], () => r(require('../pages/sortable/index')), 'pages_sortable');
-const banner = r => require.ensure([], () => r(require('../pages/banner/index')), 'pages_banner');
-const mystar = r => require.ensure([], () => r(require('../pages/mystar/index')), 'pages_mystar');
+const home = r => require.ensure([], () => r(require('../pages/home/index')), 'pages_home');
 
+const edit = r => require.ensure([], () => r(require('../pages/edit/index')), 'pages_edit');
 
+const modify = r => require.ensure([], () => r(require('../pages/edit/modify/index')), 'pages_modify');
+const dome = r => require.ensure([], () => r(require('../pages/edit/dome/index')), 'pages_dome');
+const sortable = r => require.ensure([], () => r(require('../pages/edit/sortable/index')), 'pages_sortable');
+const banner = r => require.ensure([], () => r(require('../pages/edit/banner/index')), 'pages_banner');
+const mystar = r => require.ensure([], () => r(require('../pages/edit/mystar/index')), 'pages_mystar');
+
+const restore = r => require.ensure([], () => r(require('../pages/edit/restore/index')), 'pages_restore');
+const restore_dd_default = r => require.ensure([], () => r(require('../pages/edit/restore/children/dd_default.vue')), 'pages_restore_dd_default');
+
+//edit
 const routes = [
     {
         path: '/',
-        name: 'home',
-        component: Home
-    },
-    {
-        path: '/mystar',
-        name: 'mystar',
-        component: mystar
+        name: '',
+        component: home
     },
     {
         path: '/home',
         name: 'home',
-        component: Home
+        component: home
     },
     {
-        path: '/modify',
-        name: 'modify',
-        component: Modify
+        path: '/edit',
+        component: edit,
+        children: [
+            {
+                path: '',
+                component: mystar
+            },
+            {
+                path: '/mystar',
+                name: 'mystar',
+                component: mystar
+            },
+            {
+                path: '/modify',
+                name: 'modify',
+                component: modify
+            },
+            {
+                path: '/dome',
+                name: 'dome',
+                component: dome
+            },
+            {
+                path: '/sortable',
+                name: 'sortable',
+                component: sortable
+            },
+            {
+                path: '/banner',
+                name: 'banner',
+                component: banner
+            },
+            {
+                path: '/restore',
+                name: 'restore',
+                component: restore,
+                children: [{
+                    path: '/restore_dd_default',
+                    name: 'restore_dd_default',
+                    component: restore_dd_default
+                }]
+            }
+        ]
     },
-    {
-        path: '/dome',
-        name: 'dome',
-        component: Dome
-    },
-    {
-        path: '/sortable',
-        name: 'sortable',
-        component: sortable
-    },
-    {
-        path: '/banner',
-        name: 'banner',
-        component: banner
-    }
+
 ];
 
 export default function Router(Vue) {
@@ -52,6 +79,7 @@ export default function Router(Vue) {
     const router = new VueRouter({
         routes: routes
     });
+
     return {
         router
     }

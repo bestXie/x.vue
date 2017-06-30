@@ -7,7 +7,7 @@
 </template>
 
 <script>
-    import {modulesBanner, modulesApplication} from '../modules.js'
+    import {modulesBanner, modulesApplication} from '../../util/modules.js'
     export default {
         components: {
             modulesBanner,

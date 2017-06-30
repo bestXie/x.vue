@@ -1,6 +1,9 @@
 <template>
     <div class="itemDetails-wrapper">
 
+            <!-- content goes here -->
+
+
         <div class="title"><p>{{itemDetails.data.department||''}}</p>
 
             <div class="cancel" @click="cancel"></div>

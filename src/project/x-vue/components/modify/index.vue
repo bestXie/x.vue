@@ -1,8 +1,8 @@
 <template>
     <div class="components-wrapper">
-        <div v-for="item,index in propData" :key="item.id" class="starList-wrapper">
+        <div v-for="item,index in propData" :key="item.id" class="starList-wrapper"  @click="starClick(index,'show')">
             <component v-bind:is="item.type" :propData="item" @starClick="starClick(item)"></component>
-            <modify-bar :propData="item" :index="index" @showModify="showModify"></modify-bar>
+            <modify-bar  v-if="item.modifyShow" :propData="item" :index="index" @starClick="modifyBarEvent"></modify-bar>
         </div>
     </div>
 </template>
@@ -18,26 +18,32 @@
         },
         name: 'modify',
         data: function () {
-            return {
-            }
+            return {}
         },
         props: {
-            propData:{default: []},
+            propData: {default: []},
         },
         computed: {},
         mounted: function () {
             console.log(111);
         },
         methods: {
-            showModify(index){
-                console.log(index,'modify_index');
-                return false
-                if (this.propData.length > 0) {
-                    for (let [index, value] of this.propData.entries()) { //遍历索引和元素
-                        value.showModify = true;
+            modifyBarEvent(index, type){
+//                console.log(index, 'modify_index');
+                if (type && this.propData.length > 0) {
+                    if (type == 'show') {
+                        this.showModifyBar(index)
                     }
+
                 }
-                console.log(this.propData);
+            },
+            showModifyBar(index){
+                console.log(index)
+                this.propData[index]['modifyShow'] = true;
+                console.log(this.propData)
+//                for (let [index, value] of this.propData.entries()) { //遍历索引和元素
+//                    value.showModify = true;
+//                }
             },
             starClick(data, type){
                 if (type) {

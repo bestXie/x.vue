@@ -13,13 +13,15 @@
 
 let baseUrl = 'http://moapp.fosun.com/';
 
-if (process.env.NODE_ENV == 'development') {//开发
 
+
+if (process.env.NODE_ENV == 'development') {//开发
+    baseUrl = 'http://10.160.144.183:8080/';
+    baseUrl = 'http://121.43.33.60:8090/';
 } else if (process.env.NODE_ENV == 'production') {//生产
-    // baseUrl = 'http://ouat.fosun.com'
+    baseUrl = 'http://121.43.33.60:8090/';
 }
 
-console.log(process.env.NODE_ENV);
 
 export {
     baseUrl

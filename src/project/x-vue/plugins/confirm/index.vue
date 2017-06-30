@@ -3,28 +3,30 @@
 */
 <template>
     <transition name="modal" v-if="confirm.show">
-        <!--<div class="modal-mask" >-->
-        <vMask :show="confirm.show" @maskClick="maskClick" :stylebg="'rgba(0,0,0,0.5)'">
-            <!--<div class="modal-mask-bg" @click="hiddenDialog"></div>-->
-            <div class="modal-wrapper">
-                <div class="modal-container">
-                    <div class="modal-header">
+        <vMask :show="confirm.show" :stylebg="'rgba(0,0,0,0.2)'">
+            <div class="modal-wrapper" @click="onMaskClick">
+                <div class="modal-container" @click.stop="modalContainer">
+                    <div class="modal-header" v-if="confirm.data&&confirm.data.title">
                         <slot name="header">
                             <div class="modal-default-title">
-                                <h3>确定删除"公交路线"吗</h3>
+                                <h3>{{confirm.data.title}}</h3>
                             </div>
                         </slot>
                     </div>
 
                     <div class="modal-body">
                         <slot name="body" :confirm="confirm">
+                            <div class="confirm-item" v-for="item in confirm.data.list" :key="item"
+                                 v-on:click="onConfirm(item)">
+                                <p class="confirm-item-text">{{item.text}}</p>
+                            </div>
                         </slot>
                     </div>
 
                     <div class="modal-footer">
                         <slot name="footer">
-                            <button class="modal-default-button" @click="$emit('close')">
-                                取消
+                            <button class="modal-default-button" @click.stop="onCancel">
+                                {{confirm.data.cancel}}
                             </button>
                         </slot>
                     </div>
@@ -43,18 +45,36 @@
         },
         props: ['confirm'],
         data: function () {
-            return {
-            }
+            return {}
         },
         mounted: function () {
-//            console.log(this.vDialog);
         },
         methods: {
-            maskClick: function () {
-                this.confirm.isShow = false;
+            modalContainer(){
+
+            },
+            onMaskClick: function () {
+                if (this.confirm.maskClick) {
+                    this.onConfirm();
+                }
             },
             confirmData: function () {
                 this.confirm.success(this.confirm.data)
+
+            },
+            onCancel(){
+                let _this = this;
+                this.confirm.onCancel && this.confirm.onCancel(function () {
+                    _this.confirm.show = false;
+                    console.log(_this.confirm.show, 1111)
+                }) || (this.confirm.show = false);
+            },
+            onConfirm(data){
+                let _this = this;
+                this.confirm.onConfirm && this.confirm.onConfirm(data, function () {
+                    _this.confirm.show = false;
+                    console.log(_this.confirm.show, 1111)
+                }) || (this.confirm.show = false);
             }
         },
     };
@@ -104,6 +124,28 @@
 
     .modal-body {
         /*margin: 20px 0;*/
+        background: #fff;
+        text-align: center;
+        width: 100%;
+    }
+
+    .confirm-item {
+        display: table;
+        font-size: 26px;
+        height: 90px;
+        color: #fe3824;
+        width: 100%;
+        background: #fff;
+        border-bottom: 1px #c8c8c8 solid;
+    }
+
+    .confirm-item:last-child {
+        border-bottom: 0;
+    }
+
+    .confirm-item-text {
+        display: table-cell;
+        vertical-align: middle;
     }
 
     .modal-default-button {
@@ -117,15 +159,6 @@
         text-align: center;
     }
 
-    /*
-     * The following styles are auto-applied to elements with
-     * transition="modal" when their visibility is toggled
-     * by Vue.js.
-     *
-     * You can easily play with the modal transition by editing
-     * these styles.
-     */
-
     .modal-enter {
         opacity: 0;
     }
@@ -136,7 +169,7 @@
 
     .modal-enter .modal-container,
     .modal-leave-active .modal-container {
-        -webkit-transform: scale(1.1);
-        transform: scale(1.1);
+        -webkit-transform: translate3d(0, 100%, 0);
+        transform: translate3d(0, 100%, 0);
     }
 </style>

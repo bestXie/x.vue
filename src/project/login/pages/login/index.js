@@ -3,6 +3,10 @@
  */
 import sprDialog from '../../../../components/sprDialog/sprDialog.vue'
 require('./index.less');
+import {
+    ajaxBaseUrl,
+    casBaseUrl
+} from '../../config/env';
 let indexVue = new sprWeb({
     data() {
         return {
@@ -17,7 +21,7 @@ let indexVue = new sprWeb({
             },
             showRegister: false,
             loading: false,
-            showHeader:false
+            showHeader: false
         }
     },
     mounted() {
@@ -31,12 +35,14 @@ let indexVue = new sprWeb({
         },
         render() {
             this.loading = false;
-            //this.ajaxBaseUrl = 'http://o.fosun.com';
+            // this.ajaxBaseUrl = 'https://o.fosun.com';
             // this.casBaseUrl='https://oapi.fosun.com';
-            this.ajaxBaseUrl = 'http://ouat.fosun.com';
-            this.casBaseUrl = 'https://oapiuat.fosun.com:8445';
 
-            this.getCasCheckUrl = this.ajaxBaseUrl + '/new_portal/api/cas/check?email=';
+            /*uat*/
+            this.ajaxBaseUrl = ajaxBaseUrl;
+            this.casBaseUrl = casBaseUrl;
+
+            this.getCasCheckUrl = this.casBaseUrl + '/api/oauth2/checkCAS?email=';
             this.GetRequest();
             this._debug_mode = false;
             this.showHeader = !this.isAndroid();
@@ -95,6 +101,7 @@ let indexVue = new sprWeb({
             if (this._ifTestJobCode()) {
                 _this.user.email = this.getParamValue('testJobCode') || this.$route.query.testJobCode || '';
                 _this.getCasCheck();
+                return false;
             }
             fosun_oapi_login.getDDAccount(function (user) {
                 _this.user.jobCode = user.dd_id;
@@ -104,8 +111,7 @@ let indexVue = new sprWeb({
                 }
                 _this.user.fullname = user.fullname || '';
                 _this.user.mobible1 = user.mobible1 | '';
-                _this.user.avatar = user.avatar || 'http://o.fosun.com/user/' + user.dd_id + '/portrait';
-
+                _this.user.avatar = user.avatar || _this.ajaxBaseUrl + '/user/' + user.dd_id + '/portrait';
 
                 _this.getCasCheck();
 
@@ -117,7 +123,7 @@ let indexVue = new sprWeb({
             $.get(this.getCasCheckUrl + this.user.email, function (data) {
                 _this.loading = false;
                 data = JSON.parse(data);
-                if (data.errcode !== '0') {
+                if (data.errcode == '0') {
                     _this.showRegister = true;
                 }
             }, function (data) {

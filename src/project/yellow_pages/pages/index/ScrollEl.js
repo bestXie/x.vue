@@ -49,8 +49,8 @@ var scrollEl = (function () {
     };
 
     ScrollEl.prototype.searchScrollEl = function (set) {
-        var t = this.scrollTop;
-        var ft = parseInt(set.el.offset().top);
+        var t = $('.scroll-content').scrollTop();
+        var ft = 100;
         if (t >= ft) {
             set.largeFn && set.largeFn({t: t, ft: ft});
         } else {

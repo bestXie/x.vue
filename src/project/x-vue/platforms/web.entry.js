@@ -9,10 +9,13 @@ import '../../../lib/rem'
 import App from '../container/App.vue';
 import Router from '../container/router.js';
 import Store from '../store/index.js';
+import Components  from '../util/modules.js'
 
-const {router} = Router(Vue);
+
 const {store} = Store(Vue);
+const {router} = Router(Vue);
 
+Components(Vue);
 
 if ('addEventListener' in document) {
     document.addEventListener('DOMContentLoaded', function () {
@@ -22,10 +25,14 @@ if ('addEventListener' in document) {
 
 router.beforeEach(function (to, from, next) {
     store.commit('updateLoadingStatus', true);
+    store.commit('confirm', {
+        show: false
+    });
     next()
 });
 
 router.afterEach(function (to) {
+
     store.commit('updateLoadingStatus', false);
 });
 

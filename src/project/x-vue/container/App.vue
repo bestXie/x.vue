@@ -1,10 +1,7 @@
 <template>
     <div class="app-wrapper">
         <loading :show="loadingShow"></loading>
-        <confirm :confirm="confirm"></confirm>
-        <div class="app-container" >
-            <router-view style="flex:1;"></router-view>
-        </div>
+        <router-view style="flex:1;"></router-view>
     </div>
 </template>
 <script>
@@ -14,15 +11,13 @@
     export default {
         name: 'app',
         components: {
-            loading,
-            confirm
+            loading
         },
         mounted () {
         },
         computed: {
             ...mapGetters([
                 'loadingShow',
-                'confirm'
             ])
         }
     }
@@ -30,7 +25,7 @@
 
 <style lang="less">
     @import '../../../lib/styleTheme/const/reset.less';
-    @import '../style/style.less';
+    @import '../theme/style/style.less';
 
     .star-flex {
         display: -webkit-flex; /* Safari */

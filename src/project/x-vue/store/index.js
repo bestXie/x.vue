@@ -2,16 +2,20 @@
  * Created by bestXie on 2017/6/14.
  */
 import Vuex from 'vuex';
-import StoreConfig from './store.js';
 
-let store = null;
+import state from './state.js';
+import getters from './getters.js';
+import mutations from './mutations.js';
+
 
 export default function Store(Vue) {
-    if (!store) {
-        Vue.use(Vuex);
-        store = new Vuex.Store(StoreConfig);
-    }
+    Vue.use(Vuex);
     return {
-        store
-    };
+        store: new Vuex.Store({
+            state,
+            getters,
+            mutations
+        })
+    }
+
 };

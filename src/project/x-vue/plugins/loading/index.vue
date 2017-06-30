@@ -26,6 +26,6 @@
 </script>
 
 <style lang="less" scoped>
-    @import '../../style/weui_mask.less';
-    @import '../../style/loading.less';
+    @import '../../theme/style/weui_mask.less';
+    @import '../../theme/style/loading.less';
 </style>

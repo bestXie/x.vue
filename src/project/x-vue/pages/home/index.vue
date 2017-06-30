@@ -96,7 +96,8 @@
                 'Dome',
                 'sortable',
                 'banner',
-                'mystar'
+                'mystar',
+                'restore'
             ];
             /*axios.get('http://ouat.fosun.com/new_portal/api/cas/check?email=ceshi@.ddd.com').then((res) => {
              console.log(res);

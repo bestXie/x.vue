@@ -1,5 +1,5 @@
 <template>
-    <transition name="vux-mask">
+    <transition name="modal">
         <div class="v-mask" v-show="show" @click="maskClick" :style="{background:stylebg }">
             <slot></slot>
         </div>
@@ -27,7 +27,7 @@
 </script>
 
 <style lang="less" scoped>
-    @import '../../style/weui_mask.less';
+    @import '../../theme/style/weui_mask.less';
 
     .v-mask {
         position: fixed;
@@ -40,5 +40,10 @@
         display: table;
         width: 100%;
         height: 100%;
+    }
+    .modal-enter .modal-container,
+    .modal-leave-active .modal-container {
+        -webkit-transform: scale(1.1);
+        transform: scale(1.1);
     }
 </style>
