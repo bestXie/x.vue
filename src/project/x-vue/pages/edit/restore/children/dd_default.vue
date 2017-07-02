@@ -61,6 +61,8 @@
                 </x-button-tab>
             </div>
         </section>
+
+
     </div>
 </template>
 
@@ -68,7 +70,7 @@
     import {XButtonTab} from '../../../../plugins/button-tab/index.js'
     export default {
         components: {
-            XButtonTab
+            XButtonTab,
         },
         name: 'dd_default',
         data () {
@@ -104,11 +106,19 @@
                 });
             },
             btnEvent(){
+                let _this = this;
                 this.$store.commit('confirm', {
                     data: {
                         title: '确认还原钉钉默认首页？',
                     },
-                    onCancel: function (cancel) {
+                    onConfirm(data, cancel){
+                        if (data.id == 1) {
+                            _this.$store.commit('toast', {content: '已成功还原钉钉工作默认布局'});
+                            _this.$router.go(-1);
+                        }
+                        cancel();
+                    },
+                    onCancel(cancel) {
                         cancel();
                     }
                 });

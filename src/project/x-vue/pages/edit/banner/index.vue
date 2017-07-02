@@ -27,7 +27,7 @@
     <div class="wrapper">
         <p class="title">Hello</p>
         <p class="subtitle" v-for="item in linkList" :key="item" v-on:click="getClick(item)">{{ item }}</p>
-        <star-list :propData="banner" @starClick="starClick"></star-list>
+        <starList :propData="banner" @starClick="starClick"></starList>
     </div>
 </template>
 

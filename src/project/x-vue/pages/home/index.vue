@@ -97,7 +97,7 @@
                 'sortable',
                 'banner',
                 'mystar',
-                'restore'
+                'restore/restore_dd_default'
             ];
             /*axios.get('http://ouat.fosun.com/new_portal/api/cas/check?email=ceshi@.ddd.com').then((res) => {
              console.log(res);

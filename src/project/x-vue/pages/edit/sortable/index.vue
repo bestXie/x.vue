@@ -80,7 +80,6 @@
 <script>
     import {getCasCheck} from '../../../api/index.js';
     import {Swipeout, SwipeoutItem, SwipeoutButton} from '../../../plugins/swipeout/';
-    import {Colorpicker} from '../../../plugins/color-picker/index.vue';
 
     import draggable from '../../../plugins/sortable/vuedraggable.js';
     export default {
@@ -89,7 +88,6 @@
             Swipeout,
             SwipeoutItem,
             SwipeoutButton,
-            Colorpicker
         },
         name: 'dome',
         data () {

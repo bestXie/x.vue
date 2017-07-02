@@ -6,7 +6,7 @@
         <vMask :show="confirm.show" :stylebg="'rgba(0,0,0,0.2)'">
             <div class="modal-wrapper" @click="onMaskClick">
                 <div class="modal-container" @click.stop="modalContainer">
-                    <div class="modal-header" v-if="confirm.data&&confirm.data.title">
+                    <div class="modal-header" v-if="confirm.data&&confirm.data.title" >
                         <slot name="header">
                             <div class="modal-default-title">
                                 <h3>{{confirm.data.title}}</h3>
@@ -17,7 +17,7 @@
                     <div class="modal-body">
                         <slot name="body" :confirm="confirm">
                             <div class="confirm-item" v-for="item in confirm.data.list" :key="item"
-                                 v-on:click="onConfirm(item)">
+                                 v-on:click="onConfirm(item)" :style="item.style">
                                 <p class="confirm-item-text">{{item.text}}</p>
                             </div>
                         </slot>

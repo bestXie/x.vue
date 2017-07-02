@@ -6,7 +6,6 @@
 </template>
 <script>
     import loading from '../plugins/loading/index.vue';
-    import confirm from '../plugins/confirm/index.vue';
     import {mapGetters} from 'vuex';
     export default {
         name: 'app',

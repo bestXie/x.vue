@@ -6,4 +6,5 @@
 export default {
     loadingShow: state => state.loadingShow,
     confirm: state => state.confirm,
+    toast:state => state.toast,
 }

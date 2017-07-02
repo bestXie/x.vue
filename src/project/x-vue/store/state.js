@@ -10,8 +10,11 @@ export default{
             cancel: '取消'
         },
         maskClick:true,
-        onConfirm: '',
+        onConfirm: false,
         onCancel: false,
-        onHide: ''
+        onHide:false
+    },
+    toast:{
+        show:false
     }
 }

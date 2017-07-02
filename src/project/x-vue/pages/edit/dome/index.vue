@@ -29,14 +29,12 @@
 <script>
     import {getCasCheck} from '../../../api/index.js';
     import {Swipeout, SwipeoutItem, SwipeoutButton} from '../../../plugins/swipeout/';
-    import {Colorpicker} from '../../../plugins/color-picker/index.vue';
 
     export default {
         components: {
             Swipeout,
             SwipeoutItem,
             SwipeoutButton,
-            Colorpicker
         },
         name: 'dome',
         data () {
