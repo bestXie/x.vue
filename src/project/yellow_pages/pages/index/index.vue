@@ -555,7 +555,7 @@
                         <div class="card-c">
                             <div class="card-row">
                                 <div class="card-rol abnormal-item" v-for="i in services"
-                                     @click="openItemDetail(i)">
+                                     @click="openItemDetail(i,servicesName)">
                                     {{i.name}}
                                     <div class="hot" v-if="i.hot">
                                     </div>
@@ -678,9 +678,15 @@
                 this.isCompanyIdValid(this.pagesListAjax);
                 this.scrollSearchInit();
                 let getLocationFlag = localStorage.getItem('getLocationFlag');
-                if (getLocationFlag) {
+                let sessionStorageNmae = sessionStorage.getItem("sessionStorageNmae");
+                let sessionStoragedistId = sessionStorage.getItem("sessionStoragedistId");
+                if ((getLocationFlag && getLocationFlag == "true") || sessionStorageNmae) {
                     this.ifNowCity = true;
-
+                    if (sessionStorageNmae && sessionStoragedistId) {
+                        this.nowCity = sessionStorageNmae;
+                        this.distId = sessionStoragedistId;
+                        this.cityName = sessionStorageNmae;
+                    }
                     this.getlistOfDist();
                 } else {
                     this.getLocation();
@@ -747,37 +753,42 @@
                 this.cityDom = arr;
             },
             setNowCityType(){
-                if (!this.cityName&&!this.nowCity) {
+                if (!this.cityName && !this.nowCity) {
                     this.citySelect()
-//                    this.nowCity = this.districtsList[0].distName;
-//                    this.distId = this.districtsList[0].distId;
                     return false;
                 }
                 let flag = false;
                 for (let item of this.cityDom) {
                     item.isFocus = '';
-                    if (item.distName == this.nowCity || item.distName == this.nowCity.substring(0, this.nowCity.length - 1)) {
+                    console.log(item.distName, this.cityName)
+                    if (item.distName == this.cityName || item.distName == this.cityName.substring(0, this.cityName.length - 1)) {
                         this.distId = item.distId;
                         this.nowCity = item.distName;
+                        sessionStorage.setItem("sessionStorageNmae", this.nowCity);
+                        sessionStorage.setItem("sessionStoragedistId", this.distId);
                         item.isFocus = 'isFocus';
                         flag = true;
                     }
                 }
+
                 if (!flag) {
                     this.citySelect();
                 }
 
             },
             citySelect(){
-                this.cityDialog.data={geolocatioDomList:this.geolocatioDomList,cityDom:this.cityDom,nowCity:true}
+                this.cityDialog.data = {geolocatioDomList: this.geolocatioDomList, cityDom: this.cityDom, nowCity: true}
                 this.cityDialog.isShow = true;
 
             },
             cityClick(data){
                 if (data && data.distName) {
                     this.nowCity = data.distName;
+                    this.cityName = data.distName;
                     this.cityDialog.isShow = false;
                     this.distId = data.distId;
+                    sessionStorage.setItem("sessionStorageNmae", this.nowCity);
+                    sessionStorage.setItem("sessionStoragedistId", this.distId);
 
                     this.setNowCityType();
                     this.getlistOfDist(data.distId)
@@ -808,6 +819,7 @@
                 });
             },
             showError (error){
+
                 this.ifNowCity = true;
                 this.getlistOfDist();
                 switch (error.code) {
@@ -883,11 +895,11 @@
                 }
             },
             getlistOfDist(){
+
                 if (!this.ifNowCity || !this.ifNowCityYes) {
                     return false;
                 }
                 let _this = this;
-
                 this.setNowCityType();
 
                 if (this.distId) {
