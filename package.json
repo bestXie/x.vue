@@ -7,7 +7,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development node build/dev-server.js",
     "start:dist": "cross-env NODE_ENV=production node build/dev-server.js",
-    "build": "node build/build.js",
+    "build": "cross-env NODE_ENV=production node build/build.js",
     "mock": "nodemon build/mock-server.js"
   },
   "dependencies": {

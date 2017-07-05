@@ -12,21 +12,21 @@
 
 
 let baseUrl = 'http://moapp.fosun.com/';
+let basePdfUrl = 'http://moapp.fosun.com/m/yellow_pages/statics/';
 
 
 
 if (process.env.NODE_ENV == 'development') {//开发
-    baseUrl = 'http://10.160.144.183:8080/';
-    baseUrl = 'http://121.43.33.60:8090/';
     baseUrl = 'http://10.160.144.230:8080/';
     baseUrl = 'http://moapp.fosun.com/';
+    basePdfUrl = 'http://apptest.fosun.com/m/yellow_pages/statics/';
 } else if (process.env.NODE_ENV == 'production') {//生产
-    baseUrl = 'http://121.43.33.60:8090/';
-    baseUrl = 'http://10.160.144.230:8080/';
     baseUrl = 'http://moapp.fosun.com/';
+    basePdfUrl = 'http://moapp.fosun.com/m/yellow_pages/statics/';
+    basePdfUrl = 'http://apptest.fosun.com/m/yellow_pages/statics/';
 }
 
-
 export {
-    baseUrl
+    baseUrl,
+    basePdfUrl
 }

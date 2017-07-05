@@ -513,8 +513,8 @@
                                     <div class="search-icon p-a" @click="search"></div>
                                 </form>
                             </div>
-                            <div class="geolocation-ontent" v-if="cityName">
-                                <div class="geolocation-text">{{cityName}}</div>
+                            <div class="geolocation-ontent" v-if="nowCityName">
+                                <div class="geolocation-text">{{nowCityName}}</div>
                             </div>
                             <div class="search-tips" :class="{'showSearchTips':showSearchTips}">
                                 <p>{{showSearchTips}}</p>
@@ -619,6 +619,7 @@
     import vDialog from '../../../../components/v-dialog/index.vue';
     import itemDetails from '../itemDetails/itemDetails.vue';
     import geolocation from '../geolocation/index.vue';
+    import {basePdfUrl} from '../../config/env'
     import {
         get_yellow_pages_list,
         get_yellow_pages_search,
@@ -665,6 +666,7 @@
                 ifNowCity: false,
                 ifNowCityYes: false,
                 loading: false,
+                nowCityName: ''
             }
         },
 
@@ -760,7 +762,6 @@
                 let flag = false;
                 for (let item of this.cityDom) {
                     item.isFocus = '';
-                    console.log(item.distName, this.cityName)
                     if (item.distName == this.cityName || item.distName == this.cityName.substring(0, this.cityName.length - 1)) {
                         this.distId = item.distId;
                         this.nowCity = item.distName;
@@ -787,6 +788,7 @@
                     this.cityName = data.distName;
                     this.cityDialog.isShow = false;
                     this.distId = data.distId;
+
                     sessionStorage.setItem("sessionStorageNmae", this.nowCity);
                     sessionStorage.setItem("sessionStoragedistId", this.distId);
 
@@ -814,6 +816,7 @@
                     let addComp = rs.addressComponents;
                     _this.cityName = addComp.city || '';
 //                    _this.nowCity = addComp.city || '';
+                    _this.nowCityName = addComp.city || '';
                     _this.ifNowCity = true;
                     _this.getlistOfDist();
                 });
@@ -936,15 +939,18 @@
             },
             openItemDetail (data, name) {
                 data = data || {};
-                if (data.numBak1 == 1) {
+                if (data.numBak2 == 1) {
                     data = data || {};
                     data.typeName = name;
                     this.dialog.data = data;
                     this.dialog.isShow = true;
-                } else if (data.charBak1) {
-                    window.location.href = data.charBak1
-                }
+                } else if (data.numBak2 == 2 || data.numBak2 == 4) {
 
+                    window.location.href = data.charBak1
+//                    服务内容类型 ： 1-文本 2-链接 3-PDF 4-图片
+                } else if (data.numBak2 == 3) {
+                    window.location.href = basePdfUrl + data.charBak1
+                }
             },
             goAnchor(index) {
                 this.searchList = [];
@@ -1057,7 +1063,6 @@
                 }
             }
         }
-    }
-    ;
+    };
 </script>
 
