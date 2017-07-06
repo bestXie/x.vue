@@ -125,6 +125,7 @@ let indexVue = new sprWeb({
         register(){
             let _this = this;
             let params = {
+                jobCode: this.user.jobCode || '',
                 email: this.user.email || '',
                 name: this.user.fullname || '',
                 enName: this.user.enName || '',

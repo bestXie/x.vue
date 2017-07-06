@@ -592,6 +592,12 @@
             <div class="page-tips" v-if="distId&&searchList.length==0&&services.length==0&&listOfDist.length==0">
                 <p>没有搜索到服务结果的信息</p>
             </div>
+            <div class="page-tips" v-if="loading">
+                <p>数据加载中...</p>
+            </div>
+            <div class="page-tips" v-if="getCurrentPosition">
+                <p>定位获取中...</p>
+            </div>
             <div class="goto-top" @click="gotoTop" v-if="searchBoxTop">
             </div>
 
@@ -666,7 +672,8 @@
                 ifNowCity: false,
                 ifNowCityYes: false,
                 loading: false,
-                nowCityName: ''
+                nowCityName: '',
+                getCurrentPosition: false
             }
         },
 
@@ -675,8 +682,13 @@
         },
         methods: {
             init () {
+                let _this = this;
                 this.render();
                 this.dd_ready();
+
+
+            },
+            getLocationInit(){
                 this.isCompanyIdValid(this.pagesListAjax);
                 this.scrollSearchInit();
                 let getLocationFlag = localStorage.getItem('getLocationFlag');
@@ -703,6 +715,7 @@
                 dd.ready(function () {
                     dd.ui.webViewBounce.disable();
                     dd.ui.pullToRefresh.disable();
+                    _this.getLocationInit();
                     _this.alert = function (opt) {
                         opt = opt || {};
                         dd.device.notification.alert({
@@ -716,6 +729,32 @@
                         });
                     };
                 });
+                dd.error(function (error) {
+                    alert('dd error: ' + JSON.stringify(err));
+                });
+            },
+            dd_geolocation(){
+                let _this = this;
+                dd.device.geolocation.get({
+                    targetAccuracy: 200,
+                    coordinate: 1,
+                    withReGeocode: false,
+                    onSuccess: function (result) {
+                        _this.showPosition({
+                            coords: {
+                                longitude: result.longitude,
+                                latitude: result.latitude
+                            }
+                        })
+                    },
+                    onFail: function (err) {
+                        _this.getCurrentPosition = false;
+                        _this.ifNowCity = true;
+                        _this.getlistOfDist();
+//                        alert(JSON.stringify(err));
+                    }
+                });
+
             },
             render () {
                 this.loading = false;
@@ -798,7 +837,18 @@
             },
             getLocation(){
                 if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(this.showPosition, this.showError);
+                    try {
+                        this.getCurrentPosition = true;
+                        navigator.geolocation.getCurrentPosition(this.showPosition, this.showError,
+                            {enableHighAcuracy: false, timeout: 3000, maximumAge: 10});
+                    }
+                    catch (err) {
+
+                        this.ifNowCity = true;
+                        this.getlistOfDist();
+                    }
+
+
                 }
                 else {
                     this.ifNowCity = true;
@@ -808,8 +858,10 @@
                 }
             },
             showPosition(position){
+                this.getCurrentPosition = false;
                 let _this = this;
                 let p = new BMap.Map("allmap");
+
                 let point = new BMap.Point(position.coords.longitude, position.coords.latitude);
                 let gc = new BMap.Geocoder();
                 gc.getLocation(point, function (rs) {
@@ -822,9 +874,8 @@
                 });
             },
             showError (error){
+                this.dd_geolocation();
 
-                this.ifNowCity = true;
-                this.getlistOfDist();
                 switch (error.code) {
                     case error.PERMISSION_DENIED:
                         console.log('用户不允许地理定位');
@@ -1030,16 +1081,6 @@
                     alert(JSON.stringify(err));
                     _this.loading = false;
                 });
-                /* get_yellow_pages_search({
-                 distId: this.distId,
-                 content: this.searchTxet
-                 }).then(function (data) {
-                 _this.AjaxShoeErrcode(data.data || {}, _this.searchAjaxCallback);
-                 }).catch(function (err) {
-                 alert(JSON.stringify(err));
-                 _this.loading = false;
-                 });*/
-
             },
             searchAjaxCallback (data) {
                 let _this = this;
