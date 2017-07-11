@@ -691,10 +691,11 @@
             getLocationInit(){
                 this.isCompanyIdValid(this.pagesListAjax);
                 this.scrollSearchInit();
+                localStorage.setItem('getLocationFlag', false);
                 let getLocationFlag = localStorage.getItem('getLocationFlag');
                 let sessionStorageNmae = sessionStorage.getItem("sessionStorageNmae");
                 let sessionStoragedistId = sessionStorage.getItem("sessionStoragedistId");
-                if ((getLocationFlag && getLocationFlag == "true") || sessionStorageNmae) {
+                if (sessionStorageNmae) {
                     this.ifNowCity = true;
                     if (sessionStorageNmae && sessionStoragedistId) {
                         this.nowCity = sessionStorageNmae;
@@ -702,7 +703,9 @@
                         this.cityName = sessionStorageNmae;
                     }
                     this.getlistOfDist();
-                } else {
+                } else if(getLocationFlag && getLocationFlag == "true"){
+                    this.dd_geolocation();
+                }else{
                     this.getLocation();
                 }
             },
@@ -851,10 +854,11 @@
 
                 }
                 else {
-                    this.ifNowCity = true;
-                    this.getlistOfDist();
-                    localStorage.setItem('getLocationFlag', true);
-                    console.log('位置信息获取失败');
+                    this.dd_geolocation();
+//                    this.ifNowCity = true;
+//                    this.getlistOfDist();
+//                    localStorage.setItem('getLocationFlag', true);
+//                    console.log('位置信息获取失败');
                 }
             },
             showPosition(position){
@@ -1000,7 +1004,7 @@
                     window.location.href = data.charBak1
 //                    服务内容类型 ： 1-文本 2-链接 3-PDF 4-图片
                 } else if (data.numBak2 == 3) {
-                    window.location.href = basePdfUrl + data.charBak1
+                    window.location.href = './statics/' + data.charBak1
                 }
             },
             goAnchor(index) {
